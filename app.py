@@ -28,40 +28,68 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="expanded"
 )
-st.markdown("""
-    <style>
-    .fancy-container{
-        border: 2px solid #4A90E2;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        background-color: #f9f9f9;
-        margin-bottom: 20px;
-    }       
-    </style>
-""", unsafe_allow_html=True)
+with st.container():
+    st.markdown(
+        "<h1 style='text-align: center; color: #f50707;'>Customer Churn Prediction</h1>",
+        unsafe_allow_html=True
+    )
 
-## Streamlit App
-st.title('Customer Churn Prediction')
+with st.container():
+    st.markdown("""
+        <style>
+        div[data-testid="stHorizontalBlock"] > div > div {
+            border: 2px solid #ccc;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #9fa0a1;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
 
+        .custom-label {
+            font-weight: bold;
+            color: #2C3E50;
+            font-size: 15px;
+            margin-bottom: 2px;
+            display: block;
+        }
+        </style>
+    """, unsafe_allow_html=True)
 
-st.markdown('<div class="fancy-container">', unsafe_allow_html=True)
-## User input
-col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-with col1:
-    geography = st.selectbox('Geography', onehot_encoder_geo.categories_[0])
-    gender = st.selectbox('Gender', Label_encoder_gender.classes_)
-    age = st.slider('Age', 18, 92)
-    balance = st.number_input('Balance')
-    credit_score = st.number_input('Credit Score')
-with col2:
-    estimated_salary = st.number_input('Estimated Salary')
-    tenure = st.slider('Tenure', 0, 10)
-    number_of_products = st.slider('Number Of Products', 1, 4)
-    has_cr_card = st.selectbox("Has Credit Card", [0, 1])
-    is_active_member = st.selectbox('Is an Active Member', [0,1])
-st.markdown('</div>', unsafe_allow_html=True)
+    with col1:
+        st.markdown("<label class='custom-label'>Geography</label>", unsafe_allow_html=True)
+        geography = st.selectbox('', onehot_encoder_geo.categories_[0], key='geo')
+
+        st.markdown("<label class='custom-label'>Gender</label>", unsafe_allow_html=True)
+        gender = st.selectbox('', Label_encoder_gender.classes_, key='gender')
+
+        st.markdown("<label class='custom-label'>Age</label>", unsafe_allow_html=True)
+        age = st.slider('', 18, 92, key='age')
+
+        st.markdown("<label class='custom-label'>Balance</label>", unsafe_allow_html=True)
+        balance = st.number_input('', key='balance_input')
+
+        st.markdown("<label class='custom-label'>Credit Score</label>", unsafe_allow_html=True)
+        credit_score = st.number_input('', key='credit_score_input')
+
+    with col2:
+        st.markdown("<label class='custom-label'>Estimated Salary</label>", unsafe_allow_html=True)
+        estimated_salary = st.number_input('', key='salary_input')
+
+        st.markdown("<label class='custom-label'>Tenure</label>", unsafe_allow_html=True)
+        tenure = st.slider('', 0, 10, key='tenure')
+
+        st.markdown("<label class='custom-label'>Number of Products</label>", unsafe_allow_html=True)
+        number_of_products = st.slider('', 1, 4, key='products')
+
+        st.markdown("<label class='custom-label'>Has Credit Card</label>", unsafe_allow_html=True)
+        has_cr_card = st.selectbox('', [0, 1], key='credit_card')
+
+        st.markdown("<label class='custom-label'>Is an Active Member</label>", unsafe_allow_html=True)
+        is_active_member = st.selectbox('', [0, 1], key='active_member')
+
 
 ## Prepare the Input Data 
 
@@ -97,17 +125,22 @@ prediction = model.predict(input_data_scaled)
 prediction_proba = prediction[0][0]
 
 with st.container():
+    st.markdown('<div class ="custom-box">', unsafe_allow_html=True)
     col1, col2 = st.columns(2)
 
     with col1:
-        st.write(f"Churn Probability : {prediction_proba:.2f}")
-
+       st.write(f"<h4 style='font-size: 20px; color : #051752;'>Churn Probability: {prediction_proba:.2f}</p>", unsafe_allow_html=True)
     with col2:
 
         if prediction_proba > 0.5:
-            st.write('The Customer is likely to Churn')
+            st.write("<h4 style='font-size: 20px; color : #7a0202;'>🛑 <strong>The Customer is likely to Churn</strong></p>", unsafe_allow_html=True)
         else:
-            st.write('The Customer is not likely to Churn')
+            st.write("<h4 style='font-size: 20px; color : #2c7a02; '>✅ <strong>The Customer is not likely to Churn</strong></p>", unsafe_allow_html=True)
 
 
+    st.markdown('</div>', unsafe_allow_html=True)
+
+
+
+# Inject custom CSS to target the next block
 
